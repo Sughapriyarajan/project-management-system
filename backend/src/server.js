@@ -5,6 +5,7 @@ const morgan = require("morgan");
 require("dotenv").config();
 
 const userRoutes = require("./routes/userRoutes");
+const authRoutes = require("./routes/authRoutes");
 const projectRoutes = require("./routes/projectRoutes");
 const taskRoutes = require("./routes/taskRoutes");
 const app = express();
@@ -17,7 +18,7 @@ app.use(morgan("dev"));
 app.get("/", (req, res) => {
   res.json({ message: "Project Management API is running 🚀" });
 });
-
+app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/tasks", taskRoutes);

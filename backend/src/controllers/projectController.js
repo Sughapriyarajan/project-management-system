@@ -2,17 +2,17 @@ const prisma = require("../utils/prisma");
 
 const createProject = async (req, res) => {
   try {
-    const { userId, projectName, description, status, startDate, endDate } = req.body;
+    const { projectName, description, status, startDate, endDate } = req.body;
 
-    if (!userId || !projectName) {
-      return res.status(400).json({
-        message: "userId and projectName are required"
-      });
-    }
+    if (!projectName || !projectName.trim()) {
+  return res.status(400).json({
+    message: "projectName is required"
+  });
+}
 
     const project = await prisma.project.create({
       data: {
-        userId: Number(userId),
+       userId: req.user.userId,
         projectName,
         description,
         status: status || "NOT_STARTED",
@@ -36,10 +36,13 @@ const createProject = async (req, res) => {
 const getProjects = async (req, res) => {
   try {
     const projects = await prisma.project.findMany({
-      include: {
-        tasks: true
-      }
-    });
+  where: {
+    userId: req.user.userId
+  },
+  include: {
+    tasks: true
+  }
+});
 
     res.json(projects);
   } catch (error) {
@@ -49,8 +52,123 @@ const getProjects = async (req, res) => {
     });
   }
 };
+const getProjectById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const project = await prisma.project.findFirst({
+      where: {
+        id: Number(id),
+        userId: req.user.userId
+      },
+      include: {
+        tasks: true
+      }
+    });
+
+    if (!project) {
+      return res.status(404).json({
+        message: "Project not found"
+      });
+    }
+
+    res.json(project);
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: "Failed to fetch project"
+    });
+  }
+};
+
+const updateProject = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { projectName, description, status, startDate, endDate } = req.body;
+
+    if (!projectName) {
+      return res.status(400).json({
+        message: "projectName is required"
+      });
+    }
+
+   const existingProject = await prisma.project.findFirst({
+  where: {
+    id: Number(id),
+    userId: req.user.userId
+  }
+});
+
+if (!existingProject) {
+  return res.status(404).json({
+    message: "Project not found"
+  });
+}
+
+const project = await prisma.project.update({
+  where: {
+    id: Number(id)
+  },
+      data: {
+        projectName,
+        description,
+        status,
+        startDate: startDate ? new Date(startDate) : null,
+        endDate: endDate ? new Date(endDate) : null
+      }
+    });
+
+    res.json({
+      message: "Project updated successfully",
+      project
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Failed to update project"
+    });
+  }
+};
+
+const deleteProject = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+  const existingProject = await prisma.project.findFirst({
+  where: {
+    id: Number(id),
+    userId: req.user.userId
+  }
+});
+
+if (!existingProject) {
+  return res.status(404).json({
+    message: "Project not found"
+  });
+}
+
+await prisma.project.delete({
+  where: {
+    id: Number(id)
+  }
+});
+
+    res.json({
+      message: "Project deleted successfully"
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Failed to delete project"
+    });
+  }
+};
 
 module.exports = {
   createProject,
-  getProjects
+  getProjects,
+  getProjectById,
+  updateProject,
+  deleteProject
 };
