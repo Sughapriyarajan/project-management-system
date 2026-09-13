@@ -1,18 +1,17 @@
 const { PrismaClient } = require("@prisma/client");
-const { PrismaMariaDb } = require("@prisma/adapter-mariadb");
+const { PrismaTiDBCloud } = require("@tidbcloud/prisma-adapter");
 
-const adapter = new PrismaMariaDb({
-  host: process.env.MYSQLHOST,
-  port: Number(process.env.MYSQLPORT || 3306),
-  user: process.env.MYSQLUSER,
-  password: process.env.MYSQLPASSWORD,
-  database: process.env.MYSQLDATABASE,
-  ssl: {
-  ca: require("fs").readFileSync(
-    require("path").join(__dirname, "../../isrg-root-x1.pem"),
-    "utf8"
-  )
-}
+const username = process.env.DB_USERNAME || process.env.MYSQLUSER;
+const password = process.env.DB_PASSWORD || process.env.MYSQLPASSWORD;
+const host = process.env.DB_HOST || process.env.MYSQLHOST;
+const port = process.env.DB_PORT || process.env.MYSQLPORT || 4000;
+const database = process.env.DB_DATABASE || process.env.MYSQLDATABASE;
+
+const databaseUrl =
+  `mysql://${encodeURIComponent(username)}:${encodeURIComponent(password)}@${host}:${port}/${database}?sslaccept=strict`;
+
+const adapter = new PrismaTiDBCloud({
+  url: databaseUrl
 });
 
 const prisma = new PrismaClient({ adapter });
