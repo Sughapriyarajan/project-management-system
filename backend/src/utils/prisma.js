@@ -6,7 +6,10 @@ const adapter = new PrismaMariaDb({
   port: Number(process.env.MYSQLPORT || 3306),
   user: process.env.MYSQLUSER,
   password: process.env.MYSQLPASSWORD,
-  database: process.env.MYSQLDATABASE
+  database: process.env.MYSQLDATABASE,
+   ssl: {
+  rejectUnauthorized: true
+}
 });
 
 const prisma = new PrismaClient({ adapter });
