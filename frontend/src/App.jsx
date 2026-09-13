@@ -45,7 +45,7 @@ const pendingTasks = tasks.filter(
 ).length;
 useEffect(() => {
   if (!token) return;
- fetch("https://project-management-system-production-fc8b.up.railway.app/api/projects", {
+ fetch("https://project-management-system-wgoc.onrender.com/api/projects", {
   headers: {
     Authorization: `Bearer ${token}`
   }
@@ -54,7 +54,7 @@ useEffect(() => {
     .then((data) => setProjects(data))
     .catch((error) => console.error("Failed to load projects:", error));
 
-  fetch("https://project-management-system-production-fc8b.up.railway.app/api/tasks", {
+  fetch("https://project-management-system-wgoc.onrender.com/api/tasks", {
   headers: {
     Authorization: `Bearer ${token}`
   }
@@ -75,7 +75,7 @@ const handleRegister = async () => {
     }
 
     const response = await fetch(
-      "https://project-management-system-production-fc8b.up.railway.app/api/auth/register",
+      "https://project-management-system-wgoc.onrender.com/api/auth/register",
       {
         method: "POST",
         headers: {
@@ -113,7 +113,7 @@ const handleLogin = async () => {
       return;
     }
 
-    const response = await fetch("https://project-management-system-production-fc8b.up.railway.app/api/auth/login", {
+    const response = await fetch("https://project-management-system-wgoc.onrender.com/api/auth/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -147,7 +147,7 @@ const handleCreateProject = async () => {
       return;
     }
 
-    const response = await fetch("https://project-management-system-production-fc8b.up.railway.app/api/projects", {
+    const response = await fetch("https://project-management-system-wgoc.onrender.com/api/projects", {
       method: "POST",
       headers: {
   "Content-Type": "application/json",
@@ -196,7 +196,7 @@ const handleCreateProject = async () => {
       return;
     }
 
-    const response = await fetch("https://project-management-system-production-fc8b.up.railway.app/api/tasks", {
+    const response = await fetch("https://project-management-system-wgoc.onrender.com/api/tasks", {
       method: "POST",
      headers: {
   "Content-Type": "application/json",
@@ -238,7 +238,7 @@ const handleUpdateTaskStatus = async (taskId, newStatus) => {
     if (!task) return;
 
     const response = await fetch(
-      `https://project-management-system-production-fc8b.up.railway.app/api/tasks/${taskId}`,
+      `https://project-management-system-wgoc.onrender.com/api/tasks/${taskId}`,
       {
         method: "PUT",
         headers: {
@@ -286,7 +286,7 @@ const handleEditTask = async (task) => {
 
   try {
     const response = await fetch(
-      `https://project-management-system-production-fc8b.up.railway.app/api/tasks/${task.id}`,
+      `https://project-management-system-wgoc.onrender.com/api/tasks/${task.id}`,
       {
         method: "PUT",
         headers: {
@@ -324,7 +324,7 @@ const handleEditTask = async (task) => {
 const handleDeleteTask = async (taskId) => {
   try {
     const response = await fetch(
-      `https://project-management-system-production-fc8b.up.railway.app/api/tasks/${taskId}`,
+      `https://project-management-system-wgoc.onrender.com/api/tasks/${taskId}`,
       {
         method: "DELETE",
         headers: {
@@ -352,7 +352,7 @@ const handleDeleteTask = async (taskId) => {
 const handleDeleteProject = async (projectId) => {
   try {
     const response = await fetch(
-      `https://project-management-system-production-fc8b.up.railway.app/api/projects/${projectId}`,
+      `https://project-management-system-wgoc.onrender.com/api/projects/${projectId}`,
       {
         method: "DELETE",
         headers: {
@@ -396,7 +396,7 @@ const handleEditProject = async (project) => {
 
   try {
     const response = await fetch(
-      `https://project-management-system-production-fc8b.up.railway.app/api/projects/${project.id}`,
+      `https://project-management-system-wgoc.onrender.com/api/projects/${project.id}`,
       {
         method: "PUT",
         headers: {
