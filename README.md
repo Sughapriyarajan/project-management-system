@@ -2,6 +2,11 @@
 
 A full-stack Project Management System designed to help authenticated users create, manage, track, and organize projects and tasks through a secure RESTful API and web interface.
 
+## Live Demo
+
+* **Frontend:** https://projectmanagementsyst.netlify.app/
+* **Backend API:** https://project-management-system-wgoc.onrender.com
+
 ## Features
 
 ### Authentication & Security
@@ -66,9 +71,10 @@ A full-stack Project Management System designed to help authenticated users crea
 
 ### Database
 
-* MySQL / MariaDB
+* TiDB Cloud
+* MySQL-compatible relational database
 * Prisma ORM
-* Prisma MariaDB Adapter
+* TiDB Cloud Prisma Adapter
 
 ### Security
 
@@ -130,6 +136,12 @@ project-management-system/
 
 ## API Documentation
 
+### Base URL
+
+```text
+https://project-management-system-wgoc.onrender.com
+```
+
 ### Authentication
 
 | Method | Endpoint             | Description                 |
@@ -186,7 +198,7 @@ The application uses three main relational models:
 * Tasks belong to a Project through `projectId`.
 * Cascading delete is used for related project and task records.
 
-## ER Diagram
+### ER Diagram
 
 ```mermaid
 erDiagram
@@ -206,7 +218,7 @@ erDiagram
         int userId FK
         string projectName
         string description
-        ProjectStatus status
+        string status
         datetime startDate
         datetime endDate
         datetime createdAt
@@ -217,8 +229,8 @@ erDiagram
         int projectId FK
         string taskName
         string description
-        Priority priority
-        TaskStatus status
+        string priority
+        string status
         datetime dueDate
         datetime createdAt
     }
@@ -237,6 +249,7 @@ The application implements several security measures:
 * Prisma ORM provides parameterized database operations.
 * Sensitive configuration is stored in environment variables.
 * `.env` is excluded from Git using `.gitignore`.
+* CORS is configured for frontend-backend communication.
 
 ## Installation
 
@@ -252,7 +265,7 @@ git clone https://github.com/Sughapriyarajan/project-management-system.git
 cd project-management-system/backend
 ```
 
-### 3. Install dependencies
+### 3. Install backend dependencies
 
 ```bash
 npm install
@@ -265,12 +278,18 @@ Create a `.env` file inside the `backend` folder.
 Example:
 
 ```env
-DATABASE_URL=your_database_connection
-JWT_SECRET=your_jwt_secret
 PORT=5000
+
+DB_HOST=your_database_host
+DB_PORT=4000
+DB_USERNAME=your_database_username
+DB_PASSWORD=your_database_password
+DB_DATABASE=project_management
+
+JWT_SECRET=your_jwt_secret
 ```
 
-Do not commit the `.env` file to GitHub.
+> Never commit the `.env` file or expose database credentials and JWT secrets.
 
 ### 5. Generate Prisma Client
 
@@ -278,30 +297,24 @@ Do not commit the `.env` file to GitHub.
 npx prisma generate
 ```
 
-### 6. Sync the database
-
-```bash
-npx prisma db push
-```
-
-### 7. Start the backend
+### 6. Start the backend
 
 ```bash
 npm run dev
 ```
 
-The backend will run on:
+The backend will run locally on:
 
 ```text
 http://localhost:5000
 ```
 
-### 8. Start the frontend
+### 7. Start the frontend
 
-Navigate to the frontend folder:
+Open a new terminal and navigate to the frontend:
 
 ```bash
-cd ../frontend
+cd project-management-system/frontend
 ```
 
 Install dependencies:
@@ -321,6 +334,18 @@ The frontend will normally run on:
 ```text
 http://localhost:5173
 ```
+
+### Database
+
+The deployed application uses **TiDB Cloud**, a MySQL-compatible cloud database.
+
+The production database schema contains the following tables:
+
+* `User`
+* `Project`
+* `Task`
+
+Database credentials are configured through environment variables and are not stored in the repository.
 
 ## Testing
 
@@ -345,13 +370,41 @@ The following core functionality has been implemented and tested:
 
 ## Environment Variables
 
-The following environment variables are required:
+The following environment variables are required for the backend:
 
-| Variable       | Description                        |
-| -------------- | ---------------------------------- |
-| `DATABASE_URL` | Database connection configuration  |
-| `JWT_SECRET`   | Secret key used to sign JWT tokens |
-| `PORT`         | Backend server port                |
+| Variable      | Description                        |
+| ------------- | ---------------------------------- |
+| `DB_HOST`     | TiDB Cloud database host           |
+| `DB_PORT`     | Database port                      |
+| `DB_USERNAME` | Database username                  |
+| `DB_PASSWORD` | Database password                  |
+| `DB_DATABASE` | Database name                      |
+| `JWT_SECRET`  | Secret key used to sign JWT tokens |
+| `PORT`        | Backend server port                |
+
+> Production environment variables are configured securely on the hosting platform and are not committed to GitHub.
+
+## Deployment
+
+### Frontend
+
+The React frontend is deployed on Netlify:
+
+```text
+https://projectmanagementsyst.netlify.app/
+```
+
+### Backend
+
+The Express REST API is deployed on Render:
+
+```text
+https://project-management-system-wgoc.onrender.com
+```
+
+### Database
+
+The production database is hosted on TiDB Cloud.
 
 ## Author
 
