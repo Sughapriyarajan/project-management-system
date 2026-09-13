@@ -7,8 +7,11 @@ const adapter = new PrismaMariaDb({
   user: process.env.MYSQLUSER,
   password: process.env.MYSQLPASSWORD,
   database: process.env.MYSQLDATABASE,
-   ssl: {
-  rejectUnauthorized: true
+  ssl: {
+  ca: require("fs").readFileSync(
+    require("path").join(__dirname, "../../isrg-root-x1.pem"),
+    "utf8"
+  )
 }
 });
 
